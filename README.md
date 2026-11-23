@@ -1,17 +1,17 @@
 # Mi Robot — compañero de escritorio con ESP32-S3 (ESP-IDF + Xiaozhi)
 
-Un robot parecido a Troko, pero **tuyo**: mismo hardware, tus propias funciones,
+Un robot parecido a Atomix, pero **tuyo**: mismo hardware, tus propias funciones,
 tu propio nombre y tus propios anexos. El código está hecho para **manipularlo**,
 no para leerlo de corrido.
 
-> Troko está basado en Xiaozhi (MIT). Este proyecto toma su **información pública**
+> Atomix está basado en Xiaozhi (MIT). Este proyecto toma su **información pública**
 > (hardware, pines y funciones) como base, pero el código de aquí es original
-> y no copia el firmware de Troko.
+> y no copia el firmware de Atomix.
 
 **Este proyecto es solo ESP-IDF.** Se compila con ESP-IDF 6.1 sobre el
 proyecto abierto Xiaozhi, placa `wk-esp32s3-dev`, idioma español. La voz es
 completa: dices "Hi ESP" y te escucha, y las funciones propias viven como
-herramientas MCP (`self.troko.*`) en `esp-idf/troko_tools.cc`.
+herramientas MCP (`self.atomix.*`) en `esp-idf/atomix_tools.cc`.
 
 ## Qué hace
 
@@ -28,7 +28,7 @@ herramientas MCP (`self.troko.*`) en `esp-idf/troko_tools.cc`.
   del escritorio
 - Botones físicos: BOOT = hablar/acción, Vol+ / Vol−, LED de estado
 
-## Hardware (el mismo de Troko)
+## Hardware (el mismo de Atomix)
 
 | Pieza | Modelo |
 |---|---|
@@ -56,17 +56,17 @@ Vol− 39, LED 14, BOOT 0.
    ```
 3. Copia las funciones propias a la placa:
    ```
-   cp esp-idf/troko_tools.h esp-idf/troko_tools.cc ~/xiaozhi-esp32/main/boards/wk-esp32s3-dev/
-   cp esp-idf/troko_secrets.h.example ~/xiaozhi-esp32/main/boards/wk-esp32s3-dev/troko_secrets.h
+   cp esp-idf/atomix_tools.h esp-idf/atomix_tools.cc ~/xiaozhi-esp32/main/boards/wk-esp32s3-dev/
+   cp esp-idf/atomix_secrets.h.example ~/xiaozhi-esp32/main/boards/wk-esp32s3-dev/atomix_secrets.h
    ```
-4. En `troko_secrets.h` pon tu token de Telegram, tu chat_id y tu clave
+4. En `atomix_secrets.h` pon tu token de Telegram, tu chat_id y tu clave
    de Tavily. **Nunca compartas ese archivo.**
 5. En `main/boards/wk-esp32s3-dev/wk-esp32s3-dev.cc`, añade el include
    y, en `InitializeTools()`, debajo de la línea de `LampController`:
    ```cpp
-   #include "troko_tools.h"
-   static TrokoTools troko_tools(GetDisplay());
-   troko_tools.Register();
+   #include "atomix_tools.h"
+   static AtomixTools atomix_tools(GetDisplay());
+   atomix_tools.Register();
    ```
 6. En `main/CMakeLists.txt`, en la lista `PRIV_REQUIRES`, añade solo
    `esp_http_client` antes de `${MAIN_PRIV_REQUIRES_EXTRA}`.
@@ -107,7 +107,7 @@ de antes: **Hábitos** (anillo de progreso y % completado), **Hoy**
   Decir "Atomix" para despertarlo necesita un modelo WakeNet propio
   (`wn9_atomix`), un paso aparte para más adelante.
 
-## Funciones propias (herramientas `self.troko.*`)
+## Funciones propias (herramientas `self.atomix.*`)
 
 | Herramienta | Qué hace |
 |---|---|
@@ -142,9 +142,9 @@ tienen emoción propia ahí y se acercan a la más parecida
 
 ## Añadir una función propia
 
-1. Escribe la función en `esp-idf/troko_tools.cc` siguiendo la plantilla
+1. Escribe la función en `esp-idf/atomix_tools.cc` siguiendo la plantilla
    de `esp-idf/INTEGRACION.md` (un `AddTool` con sus `Property`).
-2. Si guarda datos, usa `Settings` (NVS) con el espacio de nombres `troko`.
+2. Si guarda datos, usa `Settings` (NVS) con el espacio de nombres `atomix`.
 3. Recompila y graba. La voz la descubre sola por su descripción.
 
 ## Estructura
@@ -157,13 +157,13 @@ mi-robot/
 │   └── generar.py             # genera esp-idf/panel_html.h desde index.html
 ├── esp-idf/
 │   ├── README-ESPIDF.md       # guía completa del camino ESP-IDF + Xiaozhi
-│   ├── INTEGRACION.md         # pasos para integrar troko_tools y plantilla MCP
-│   ├── troko_tools.h          # declaración de TrokoTools (18 herramientas)
-│   ├── troko_tools.cc         # tus funciones: hábitos, tareas, alarmas, Telegram…
-│   ├── troko_panel.h          # servidor web del panel
-│   ├── troko_panel.cc         # rutas /, /api/estado, /cmd
+│   ├── INTEGRACION.md         # pasos para integrar atomix_tools y plantilla MCP
+│   ├── atomix_tools.h          # declaración de AtomixTools (18 herramientas)
+│   ├── atomix_tools.cc         # tus funciones: hábitos, tareas, alarmas, Telegram…
+│   ├── atomix_panel.h          # servidor web del panel
+│   ├── atomix_panel.cc         # rutas /, /api/estado, /cmd
 │   ├── panel_html.h           # la página del panel, generada (no editar a mano)
-│   └── troko_secrets.h.example # copia a troko_secrets.h (NO se comparte)
+│   └── atomix_secrets.h.example # copia a atomix_secrets.h (NO se comparte)
 └── anexos/
     ├── cableado.md            # tabla de pines y consejos de montaje
     ├── pc_companion.py        # compañero para PC: estado y limpieza de escritorio
@@ -174,7 +174,7 @@ mi-robot/
 
 - `anexos/pc_companion.py`: un programita en Python para tu PC. El robot
   le pregunta el estado (`/estado`) y le pide limpiar el escritorio
-  (`/limpiar`). Pon su URL en `TROKO_PC_URL` en `troko_secrets.h`.
+  (`/limpiar`). Pon su URL en `ATOMIX_PC_URL` en `atomix_secrets.h`.
 - ¿Más anexos? Ideas listas para añadir: cámara, sensor de temperatura,
   tira LED, control de luces por MQTT/Home Assistant. Dime cuál quieres
   y lo añadimos como un archivo nuevo, sin tocar lo demás.

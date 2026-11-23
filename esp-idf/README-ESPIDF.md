@@ -3,7 +3,7 @@
 Este es el único camino del proyecto: firmware ESP-IDF sobre el proyecto
 abierto **Xiaozhi** (github.com/78/xiaozhi-esp32, licencia MIT), placa
 `wk-esp32s3-dev`. Dices "Hi ESP" y te escucha, con conversación por voz.
-Es el que usa Troko.
+Es el que usa Atomix.
 
 > Esto es una guía + plantilla, no el proyecto completo: el proyecto
 > Xiaozhi es enorme (cientos de archivos) y se clona aparte.
@@ -17,12 +17,12 @@ source export.sh
 idf.py --version
 ```
 
-## 2. Clonar Xiaozhi y compilar la placa de Troko
+## 2. Clonar Xiaozhi y compilar la placa de Atomix
 
 ```sh
 git clone https://github.com/78/xiaozhi-esp32.git
 cd xiaozhi-esp32
-# Fija la versión que usaba el firmware original de Troko (2.5.3, oct 2026):
+# Fija la versión que usaba el firmware original de Atomix (2.5.3, oct 2026):
 git checkout 50e96be39844851579fe7fa9c8f52626b708be5b
 ```
 
@@ -44,24 +44,24 @@ python3 scripts/build.py wk-esp32s3-dev --name wk-esp32s3-dev --wake-word hiesp 
 > En Xiaozhi 2.5.3 el flag es `--wake-word`, no `--custom-wake-word`:
 > admite `hiesp` ("Hi ESP"), `nihaoxiaozhi`, `disabled` o un modelo
 > ESP-SR como `wn9_jarvis_tts` (ver con
-> `python3 scripts/build.py --list-wake-words`). La palabra "troko" como
-> wake word personalizada no viene en ESP-SR: Troko entrenó su propio
+> `python3 scripts/build.py --list-wake-words`). La palabra "atomix" como
+> wake word personalizada no viene en ESP-SR: Atomix entrenó su propio
 > modelo WakeNet. Es un paso aparte (hay que generar un modelo
-> `wn9_troko` con las herramientas de Espressif); mientras tanto el
+> `wn9_atomix` con las herramientas de Espressif); mientras tanto el
 > robot funciona igual por voz, despertándose con "Hi ESP".
 
-Cambia `troko` por tu palabra de activación y `es-ES` por tu idioma.
+Cambia `atomix` por tu palabra de activación y `es-ES` por tu idioma.
 El `.bin` queda en `build/`. Grábalo en `0x0` con esptool o esptool-js.
 
 ## 3. Tus funciones ya escritas (herramientas MCP)
 
 Ya no es solo una plantilla: tus funciones están escritas en
-`troko_tools.h` y `troko_tools.cc` (en esta misma carpeta), listas
+`atomix_tools.h` y `atomix_tools.cc` (en esta misma carpeta), listas
 para copiar a `main/boards/wk-esp32s3-dev/`. Ver `INTEGRACION.md` para
 los pasos exactos y la lista completa: hábitos, tareas, recordatorios,
 alarma, temporizador, Pomodoro, Telegram, búsqueda web (Tavily),
-animaciones y PC. Las claves van en `troko_secrets.h` (copia de
-`troko_secrets.h.example`), no en el `.env` de abajo.
+animaciones y PC. Las claves van en `atomix_secrets.h` (copia de
+`atomix_secrets.h.example`), no en el `.env` de abajo.
 
 Si quieres añadir una función nueva desde cero, la plantilla es esta:
 
@@ -71,7 +71,7 @@ void InitializeTools() {
     static LampController lamp(LAMP_GPIO);
 
     auto& mcp_server = McpServer::GetInstance();
-    mcp_server.AddTool("self.troko.saludar",
+    mcp_server.AddTool("self.atomix.saludar",
         "Saluda al usuario por su nombre y muestra el saludo en pantalla.",
         PropertyList({
             Property("nombre", kPropertyTypeString),
@@ -93,15 +93,15 @@ Reglas del proyecto Xiaozhi (de su `AGENTS.md`):
   tus funciones van en la carpeta de la placa.
 - No edites archivos generados: `build/`, `managed_components/`, `sdkconfig*`.
 
-## 4. Qué es de Troko y qué no
+## 4. Qué es de Atomix y qué no
 
 Lo que **sí** trae Xiaozhi de serie: conversación por voz, wake word,
 pantalla, volumen, cámara, OTA, estado del dispositivo.
 
-Lo que **no** trae (era propio de Troko y hay que recrearlo con la
+Lo que **no** trae (era propio de Atomix y hay que recrearlo con la
 plantilla de arriba, una herramienta por función): pomodoro, hábitos,
 tareas, recordatorios, Telegram y búsqueda web. Los textos y límites
-que usaba Troko están documentados en el análisis previo del firmware:
+que usaba Atomix están documentados en el análisis previo del firmware:
 recordatorios máx. 8, tareas máx. 20, hábitos máx. 15, temporizador
 1–86400 s, pomodoro 25 min, animaciones `240`, `pelota`, `ovejas`,
 `calma`, `descubre` y 12 más (`guino`, `enamorado`, `enojado`,

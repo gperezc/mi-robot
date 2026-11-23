@@ -14,10 +14,10 @@ Telegram la lista de tareas").
    de tu bot: no la compartas.
 4. Búscalo en Telegram, pulsa Start y escríbele un "hola". Busca tu
    `chat_id` con **@userinfobot** (te responde con tu id).
-5. En `esp-idf/troko_secrets.h` pon:
+5. En `esp-idf/atomix_secrets.h` pon:
    ```cpp
-   #define TROKO_TELEGRAM_TOKEN   "123456789:AA..."
-   #define TROKO_TELEGRAM_CHAT_ID "123456789"
+   #define ATOMIX_TELEGRAM_TOKEN   "123456789:AA..."
+   #define ATOMIX_TELEGRAM_CHAT_ID "123456789"
    ```
 
 Solo tu `chat_id` recibe los mensajes del robot. Si quieres que los avisos
@@ -28,9 +28,9 @@ lleguen a un grupo, pon el chat_id del grupo (negativo, p. ej.
 
 1. Crea una cuenta en **app.tavily.com** (plan gratuito con créditos mensuales).
 2. En el panel, copia tu **API Key**. Empieza por `tvly-`.
-3. En `esp-idf/troko_secrets.h` pon:
+3. En `esp-idf/atomix_secrets.h` pon:
    ```cpp
-   #define TROKO_TAVILY_API_KEY "tvly-..."
+   #define ATOMIX_TAVILY_API_KEY "tvly-..."
    ```
 4. Pruébalo por voz: *"busca quién ganó el partido de ayer"*.
 

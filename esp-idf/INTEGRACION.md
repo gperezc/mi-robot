@@ -3,20 +3,20 @@
 Estado: el código de tus funciones ya está escrito y revisado contra la
 API real de Xiaozhi 2.5.3 (`mcp_server.h`, `settings.h`, `display.h`) y
 **la base ya compiló en tu Mac el 2026-11-23** ("Project build complete").
-Cada vez que cambien `troko_tools.cc` o `troko_panel.cc`, hay que copiar
+Cada vez que cambien `atomix_tools.cc` o `atomix_panel.cc`, hay que copiar
 el archivo nuevo y recompilar antes de grabar.
 
 ## Archivos (en `esp-idf/` de este proyecto)
 
-- `troko_tools.h` / `troko_tools.cc` — tus herramientas MCP y los comandos
+- `atomix_tools.h` / `atomix_tools.cc` — tus herramientas MCP y los comandos
   del panel web (`EstadoJSON()`, `EjecutarComando()`).
-- `troko_panel.h` / `troko_panel.cc` — servidor web del panel del robot.
+- `atomix_panel.h` / `atomix_panel.cc` — servidor web del panel del robot.
 - `panel_html.h` — la página del panel, generada desde
   `panel-web/index.html` con `python3 panel-web/generar.py`.
-- `troko_secrets.h.example` — copia como `troko_secrets.h` con tus
+- `atomix_secrets.h.example` — copia como `atomix_secrets.h` con tus
   claves (Telegram, Tavily, URL del PC). Nunca se comparte.
 
-## Herramientas que registra (nombres `self.troko.*`)
+## Herramientas que registra (nombres `self.atomix.*`)
 
 | Herramienta | Qué hace |
 |---|---|
@@ -38,28 +38,28 @@ descartar`, `temporizador pausa/parar`, `pomodoro`, `ojos`, `buscar`,
 
 Los avisos (timer, pomodoro, alarma, recordatorio) se muestran en
 pantalla, suenan por la voz y se mandan por Telegram si está configurado.
-Todo se guarda en NVS (`namespace "troko"`), así que sobrevive a un
-reinicio. Las claves se leen solo de `troko_secrets.h`.
+Todo se guarda en NVS (`namespace "atomix"`), así que sobrevive a un
+reinicio. Las claves se leen solo de `atomix_secrets.h`.
 
 ## Pasos de integración (cuando la base compile)
 
-1. Copia `troko_tools.h`, `troko_tools.cc`, `troko_panel.h`,
-   `troko_panel.cc`, `panel_html.h` y tu `troko_secrets.h` a
+1. Copia `atomix_tools.h`, `atomix_tools.cc`, `atomix_panel.h`,
+   `atomix_panel.cc`, `panel_html.h` y tu `atomix_secrets.h` a
    `main/boards/wk-esp32s3-dev/` del proyecto Xiaozhi.
    Las fuentes de la placa se recogen con GLOB (`*.cc`), así que los
    archivos nuevos se compilan solos.
 2. En `main/boards/wk-esp32s3-dev/wk-esp32s3-dev.cc`, añade arriba:
    ```cpp
-   #include "troko_tools.h"
+   #include "atomix_tools.h"
    ```
    Y dentro de `InitializeTools()`, junto al `LampController` que ya hay:
    ```cpp
-   static TrokoTools troko_tools(GetDisplay());
-   troko_tools.Register();
+   static AtomixTools atomix_tools(GetDisplay());
+   atomix_tools.Register();
    ```
    `Register()` también arranca el panel web. No toques `config.h` ni
    los pines de la placa.
-3. Añade los componentes que usan `troko_tools.cc` y `troko_panel.cc`
+3. Añade los componentes que usan `atomix_tools.cc` y `atomix_panel.cc`
    (HTTP para Telegram y Tavily, y el servidor del panel) a
    `main/CMakeLists.txt`, en la lista `PRIV_REQUIRES` de
    `idf_component_register` (antes de `${MAIN_PRIV_REQUIRES_EXTRA}`):
@@ -107,7 +107,7 @@ el `panel_html.h` nuevo a la placa y recompila.
 
 ## Qué falta por verificar (necesita la compilación)
 
-- Que `troko_tools.cc` compile sin errores contra Xiaozhi 2.5.3.
+- Que `atomix_tools.cc` compile sin errores contra Xiaozhi 2.5.3.
 - Que el `.bin` resultante arranque en el hardware y las herramientas
   aparezcan en el servidor (se ven en los logs del puerto serie).
 - El mapeo de animaciones (`240`/`genial`→`cool`, `pelota`/`feliz`→`happy`,
@@ -118,7 +118,7 @@ el `panel_html.h` nuevo a la placa y recompila.
   `normal`→`neutral`) usa las emociones del paquete de assets de Xiaozhi.
   Si una emoción no está en el paquete, la herramienta lo dice en vez de
   fallar en silencio. Si añades tus GIF propios al `assets`, cambia el
-  mapeo en `troko_tools.cc`. Las 4 últimas (`oops`, `seguro`,
+  mapeo en `atomix_tools.cc`. Las 4 últimas (`oops`, `seguro`,
   `risa_apenada`, `shock`) no tienen emoción propia en el paquete y se
   acercan a la más parecida: oops/shock → `surprised`, seguro → `cool`,
   risa_apenada → `embarrassed`.

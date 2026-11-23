@@ -1,6 +1,6 @@
-# Cableado — mismo hardware que Troko
+# Cableado — mismo hardware que Atomix
 
-Fuente: guía pública de Troko (trokotec.com/troko/build). Pines verificados
+Fuente: guía pública de Troko (trokotec.com/troko/build), base del proyecto Atomix. Pines verificados
 también contra el firmware original (placa `wk-esp32s3-dev`).
 
 ## Materiales
